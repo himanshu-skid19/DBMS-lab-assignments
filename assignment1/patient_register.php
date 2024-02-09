@@ -1,15 +1,28 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$userID = $_SESSION['id'];
+$userRole = $_SESSION['role'];
+
 require_once('db_connection.php');
+
+$name = $_SESSION['name'];
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->begin_transaction();
 
     try {
+        ;
         $patient_ssn = $_POST['patient_ssn'];
-        $patient_name = $_POST['patient_name'];
         $patient_address = $_POST['patient_address'];
         $patient_age = $_POST['patient_age'];
-        
+
 
         try{
             $query = "SELECT * FROM doctor ORDER BY RAND() LIMIT 1";
@@ -34,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         $stmt = $conn->prepare("INSERT INTO patient (ssn, name, address, Age, Pri_physician_ssn) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssis", $patient_ssn, $patient_name, $patient_address, $patient_age, $doctor_ssn);
+        $stmt->bind_param("sssis", $patient_ssn, $name, $patient_address, $patient_age, $doctor_ssn);
         $stmt->execute();
         $conn->commit();
         $stmt->close();

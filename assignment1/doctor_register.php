@@ -6,12 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         $doctor_ssn = $_POST['doctor_ssn'];
-        $doctor_name = $_POST['doctor_name'];
         $doctor_specialization = $_POST['doctor_specialization'];
         $doctor_experience = $_POST['doctor_experience'];
 
-        $stmt = $conn->prepare("INSERT INTO doctor (ssn, doctor_name, specialization, Years_exp) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $doctor_ssn, $doctor_name, $doctor_specialization, $doctor_experience);
+        $stmt = $conn->prepare("INSERT INTO doctor (ssn, specialization, Years_exp) VALUES (?, ?, ?)");
+        $stmt->bind_param("ssi", $doctor_ssn, $doctor_specialization, $doctor_experience);
         $stmt->execute();
         $conn->commit();
         $stmt->close();
