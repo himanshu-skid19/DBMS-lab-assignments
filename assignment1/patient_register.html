@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Patient Registration Page</title>
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Register</strong></li>
+        </ul>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#" role="button">About</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div class="grid">
+            <section>
+                <hgroup>
+                    <h1>Fill in your Details</h2>
+                </hgroup>
+                <form action="patient_register.php" method="POST">
+                    <input type="text" id="patient_ssn" name="patient_ssn" placeholder="SSN" aria-label="Patient SSN" required>
+                    <input type="text" id="patient_name" name="patient_name" placeholder="Full Name" aria-label="Patient name" required>
+                    <input type="text" id="patient_address" name="patient_address" placeholder="Address" aria-label="Patient Address" required>
+                    <input type="integer" id="patient_age" name="patient_age" placeholder="Age" aria-label="Patient Age" required>
+                    <button type="submit">Register</button>
+                </form>
+
+            </section>
+        </div>
+    </main>
+
+</body>
+</html>
