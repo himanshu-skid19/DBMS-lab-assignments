@@ -114,3 +114,44 @@ CREATE TABLE `sells` (
 
 
 
+
+
+### Views
+
+```sql
+CREATE VIEW PatientDetails AS
+SELECT
+  u.id,
+	p.SSN,
+    p.Name,
+    P.Address,
+    p.Age,
+    ph.doctor_name AS PhysicianName,
+    ph.Years_exp,
+    ph.specialization,
+    d.Trade_name AS DrugName,
+    d.Company_name,
+    pr.date,
+    pr.qty,
+    s.price,
+    pa.name AS PharmacyName,
+    pa.address AS PharmacyAddress,
+    pa.Phone_number AS PharmacyPhone,
+    c.Phone_number AS CompanyPhone
+FROM
+ 	Patient p
+JOIN
+  users u ON p.name = u.name
+JOIN
+	doctor ph ON p.Pri_physician_ssn = ph.ssn
+JOIN
+	prescribes pr ON p.SSN = pr.patient_ssn
+JOIN
+	drug d ON pr.drug_Trade_name = d.Trade_name
+JOIN
+	sells s ON d.Trade_name = s.drug_Trade_name AND d.Company_name = s.company_name
+JOIN
+	pharmacy pa ON s.pharmacy_name = pa.name
+JOIN
+	pharmaceutical_company c ON d.Company_name = c.name
+```

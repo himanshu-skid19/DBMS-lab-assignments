@@ -6,80 +6,42 @@ require_once('db_connection.php');
 $user_id = $_SESSION['id'];
 $user_role = $_SESSION['role'];
 
-$sql = $conn->prepare("SELECT * FROM user_doctor_details WHERE user_id = ?");
 
-$sql->bind_param("i", $user_id);
+if ($user_role == 'patient'){
+    $sql = $conn->prepare("SELECT * FROM patientdetails WHERE id = ?");
 
-$sql->execute();
-$result = $sql->get_result();
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $ssn = $row['ssn'];
-    $name = $row['name'];
-    $address = $row['address'];
-    $age = $row['Age'];
-    $doc_name = $row['doc_name'];
-    $doc_exp = $row['experience'];
-    $doctor_specialization = $row['doctor_specialization'];
-    
-    $prescribes = $conn->prepare("SELECT * FROM prescribes WHERE patient_ssn = ?");
-    $prescribes->bind_param("s", $ssn);
-    $prescribes->execute();
-    $prescribes_result = $prescribes->get_result();
-    if ($prescribes_result->num_rows > 0) {
-        $prescribes_row = $prescribes_result->fetch_assoc();
-        $prescribes_name = $prescribes_row['drug_Trade_name'];
-        $prescribes_company = $prescribes_row['company_name'];
-        $prescribes_date = $prescribes_row['date'];
-        $prescribes_qty = $prescribes_row['qty'];
-    
-        $prescribes->close();
+    $sql->bind_param("i", $user_id);
 
-        $sells = $conn->prepare("SELECT * FROM sells WHERE drug_Trade_name = ? AND company_name = ?");
-        $sells->bind_param("ss", $prescribes_name, $prescribes_company);
-        $sells->execute();
-        $sells_result = $sells->get_result();
-        if ($sells_result->num_rows > 0) {
-            $sells_row = $sells_result->fetch_assoc();
-            $price = $sells_row['price'];
-            $pharmacy_name = $sells_row['pharmacy_name'];
-            $sells->close();
-
-            $phone = $conn->prepare("SELECT address, Phone_number FROM pharmacy WHERE name = ?");
-            $phone->bind_param("s", $pharmacy_name);
-            $phone->execute();
-            $phone_result = $phone->get_result();
-            if ($phone_result->num_rows > 0) {
-                $phone_row = $phone_result->fetch_assoc();
-                $pharmacy_address = $phone_row['address'];
-                $pharmacy_phone = $phone_row['Phone_number'];
-                $phone->close();
-
-                $company_phone = $conn->prepare("SELECT Phone_number FROM pharmaceutical_company WHERE name = ?");
-                $company_phone->bind_param("s", $prescribes_company);
-                $company_phone->execute();
-                $company_phone_result = $company_phone->get_result();
-                if ($company_phone_result->num_rows > 0) {
-                    $company_phone_row = $company_phone_result->fetch_assoc();
-                    $company_phone_number = $company_phone_row['Phone_number'];
-                    $company_phone->close();
-                } else {
-                    echo "No company found with that name";
-                }
-            } else {
-                echo "No pharmacy found with that name";
-            }   
-        } else {
-            echo "No drug found with that name and company";
-        }
-
-    }
+    $sql->execute();
+    $result = $sql->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $ssn = $row['SSN'];
+        $name = $row['Name'];
+        $address = $row['Address'];
+        $age = $row['Age'];
+        $doc_name = $row['PhysicianName'];
+        $doc_exp = $row['Years_exp'];
+        $doctor_specialization = $row['specialization'];
+        $prescribes_name = $row['DrugName'];
+        $prescribes_company = $row['Company_name'];
+        $prescribes_date = $row['date'];
+        $prescribes_qty = $row['qty'];
+        $price = $row['price'];
+        $pharmacy_name = $row['PharmacyName'];
+        $pharmacy_address = $row['PharmacyAddress'];
+        $pharmacy_phone = $row['PharmacyPhone'];
+        $company_phone_number = $row['CompanyPhone'];
+        
+        
     
 } else {
     echo "No user found with that username";
 }
 $sql->close();
 $conn->close();
+}
+
 ?>
 
 
@@ -104,62 +66,64 @@ $conn->close();
     <main class="container">
         <div class="grid">
             <section>
-                <h1>Your Details</h1>
-                <div class="card">
-                    <p><strong>SSN:</strong> <?php echo $ssn; ?></p>
-                    <p><strong>Name:</strong> <?php echo $name; ?></p>
-                    <p><strong>Address:</strong> <?php echo $address; ?></p>
-                    <p><strong>Age:</strong> <?php echo $age; ?> years</p>
-                </div>
-                <h2>Primary Physician Details</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Experience</th>
-                            <th>Specialization</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><?php echo $doc_name; ?></td>
-                            <td><?php echo $doc_exp; ?> Years</td>
-                            <td><?php echo $doctor_specialization; ?></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <?php if ($user_role == 'patient'): ?>
+                    <h1>Your Details</h1>
+                    <div class="card">
+                        <p><strong>SSN:</strong> <?php echo $ssn; ?></p>
+                        <p><strong>Name:</strong> <?php echo $name; ?></p>
+                        <p><strong>Address:</strong> <?php echo $address; ?></p>
+                        <p><strong>Age:</strong> <?php echo $age; ?> years</p>
+                    </div>
+                    <h2>Primary Physician Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Experience</th>
+                                <th>Specialization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><?php echo $doc_name; ?></td>
+                                <td><?php echo $doc_exp; ?> Years</td>
+                                <td><?php echo $doctor_specialization; ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <h2>Prescription Details</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name of Drug</th>
-                            <th>Company</th>
-                            <th>Prescription Date</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Pharmacy Name</th>
-                            <th>Pharmacy Address</th>
-                            <th>Pharmacy Phone</th>
-                            <th>Company Phone</th>
+                    <h2>Prescription Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name of Drug</th>
+                                <th>Company</th>
+                                <th>Prescription Date</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Pharmacy Name</th>
+                                <th>Pharmacy Address</th>
+                                <th>Pharmacy Phone</th>
+                                <th>Company Phone</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><?php echo $prescribes_name; ?></td>
-                            <td><?php echo $prescribes_company; ?> </td>
-                            <td><?php echo $prescribes_date; ?></td>
-                            <td><?php echo $prescribes_qty; ?></td>
-                            <td><?php echo $price, " $"; ?></td>
-                            <td><?php echo $pharmacy_name; ?></td>
-                            <td><?php echo $pharmacy_address; ?></td>
-                            <td><?php echo $pharmacy_phone; ?></td>
-                            <td><?php echo $company_phone_number; ?></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><?php echo $prescribes_name; ?></td>
+                                <td><?php echo $prescribes_company; ?> </td>
+                                <td><?php echo $prescribes_date; ?></td>
+                                <td><?php echo $prescribes_qty; ?></td>
+                                <td><?php echo $price, " $"; ?></td>
+                                <td><?php echo $pharmacy_name; ?></td>
+                                <td><?php echo $pharmacy_address; ?></td>
+                                <td><?php echo $pharmacy_phone; ?></td>
+                                <td><?php echo $company_phone_number; ?></td>
 
-                        </tr>
-                    </tbody>
-                </table>
+                            </tr>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </section>
         </div>
     </main>
