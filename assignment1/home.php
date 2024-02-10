@@ -34,6 +34,45 @@ if ($result->num_rows > 0) {
         $prescribes_qty = $prescribes_row['qty'];
     
         $prescribes->close();
+
+        $sells = $conn->prepare("SELECT * FROM sells WHERE drug_Trade_name = ? AND company_name = ?");
+        $sells->bind_param("ss", $prescribes_name, $prescribes_company);
+        $sells->execute();
+        $sells_result = $sells->get_result();
+        if ($sells_result->num_rows > 0) {
+            $sells_row = $sells_result->fetch_assoc();
+            $price = $sells_row['price'];
+            $pharmacy_name = $sells_row['pharmacy_name'];
+            $sells->close();
+
+            $phone = $conn->prepare("SELECT address, Phone_number FROM pharmacy WHERE name = ?");
+            $phone->bind_param("s", $pharmacy_name);
+            $phone->execute();
+            $phone_result = $phone->get_result();
+            if ($phone_result->num_rows > 0) {
+                $phone_row = $phone_result->fetch_assoc();
+                $pharmacy_address = $phone_row['address'];
+                $pharmacy_phone = $phone_row['Phone_number'];
+                $phone->close();
+
+                $company_phone = $conn->prepare("SELECT Phone_number FROM pharmaceutical_company WHERE name = ?");
+                $company_phone->bind_param("s", $prescribes_company);
+                $company_phone->execute();
+                $company_phone_result = $company_phone->get_result();
+                if ($company_phone_result->num_rows > 0) {
+                    $company_phone_row = $company_phone_result->fetch_assoc();
+                    $company_phone_number = $company_phone_row['Phone_number'];
+                    $company_phone->close();
+                } else {
+                    echo "No company found with that name";
+                }
+            } else {
+                echo "No pharmacy found with that name";
+            }   
+        } else {
+            echo "No drug found with that name and company";
+        }
+
     }
     
 } else {
@@ -98,6 +137,12 @@ $conn->close();
                             <th>Company</th>
                             <th>Prescription Date</th>
                             <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Pharmacy Name</th>
+                            <th>Pharmacy Address</th>
+                            <th>Pharmacy Phone</th>
+                            <th>Company Phone</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -106,6 +151,12 @@ $conn->close();
                             <td><?php echo $prescribes_company; ?> </td>
                             <td><?php echo $prescribes_date; ?></td>
                             <td><?php echo $prescribes_qty; ?></td>
+                            <td><?php echo $price, " $"; ?></td>
+                            <td><?php echo $pharmacy_name; ?></td>
+                            <td><?php echo $pharmacy_address; ?></td>
+                            <td><?php echo $pharmacy_phone; ?></td>
+                            <td><?php echo $company_phone_number; ?></td>
+
                         </tr>
                     </tbody>
                 </table>
