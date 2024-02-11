@@ -36,8 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             case 'company':
                 header('Location: company_register.php');
                 break;
+
+            case 'pharmacy':
+                header('Location: pharmacy_register.php');
+                break;
             case 'admin':
-                header('Location: admin_register.html');
+                header('Location: login.html');
                 break;
             default:
                 header('Location: error_page.html' );

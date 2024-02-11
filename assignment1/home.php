@@ -10,6 +10,7 @@ $user_name = $_SESSION['name'];
 $patient_details = [];
 $doctor_details = [];
 $company_details = [];
+$pharmacy_details = [];
 
 if ($user_role == 'patient'){
     $sql = $conn->prepare("SELECT * FROM patientdetails WHERE id = ?");
@@ -57,18 +58,99 @@ if ($user_role == 'patient'){
     echo "No user found with that username";
     
     }
-} else if ($user_role == "admin"){
-    $sql = $conn->prepare("SELECT * FROM admin WHERE name = ?");
+
+
+} else if ($user_role == "pharmacy"){
+    $sql = $conn->prepare("SELECT * FROM pharmacydetails WHERE name = ?");
     $sql->bind_param("s", $user_name);
     $sql->execute();
     $result = $sql->get_result();
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $admin_name = $row['name'];
-        $admin_phone = $row['Phone_number'];
+        while ($row = $result->fetch_assoc()) {
+            $pharmacy_details[] = $row;
+        }
+
     } else {
     echo "No user found with that username";
     
+    }
+} else if ($user_role == "admin"){
+
+    # getting from patients
+    $sql = $conn->prepare("SELECT * FROM patient");
+    $sql->execute();
+    $result = $sql->get_result();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $patient_details[] = $row;
+        }
+    } else {
+    echo "No user found with that username";
+    
+    }
+
+    # getting from doctors
+    $sql = $conn->prepare("SELECT * FROM doctor");  
+    $sql->execute();
+    $result = $sql->get_result();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $doctor_details[] = $row;
+        }
+    } else {
+      echo "No user found with that username";
+    
+    }
+
+    # getting from company
+    $sql = $conn->prepare("SELECT * FROM pharmaceutical_company");
+    $sql->execute();
+    $result = $sql->get_result();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $company_details[] = $row;
+        }
+    } else { 
+        echo "No user found with that username";
+    
+    }
+
+    # getting from pharmacy
+    $sql = $conn->prepare("SELECT * FROM pharmacy");
+    $sql->execute();
+    $result = $sql->get_result();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $pharmacy_details[] = $row;
+        }
+    } else {
+        echo "No user found with that username";
+    
+    }
+
+    # getting from sells
+    $sql = $conn->prepare("SELECT * FROM sells");
+    $sql->execute();
+    $result = $sql->get_result();
+    $sells_details = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $sells_details[] = $row;
+        }
+    } else {
+        echo "No user found with that username";
+    }
+    # getting from prescribes
+    $sql = $conn->prepare("SELECT * FROM prescribes");
+    $sql->execute();
+    $result = $sql->get_result();
+    $prescribes_details = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $prescribes_details[] = $row;
+        }
+    } else {
+        echo "No user found with that username";
     }
 }
 
@@ -253,6 +335,165 @@ $conn->close();
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                <?php elseif ($user_role == 'pharmacy'): ?>
+                    <h1>Your Details</h1>
+                    <div class="card">
+                        <p><strong>Name:</strong> <?php echo $user_name; ?></p>
+                        <p><strong>Phone Number:</strong> <?php echo $pharmacy_details[0]['Phone_number']; ?></p>
+                    </div>
+                    <h2>Pharmacy Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Drug Name</th>
+                                <th>Price</th>
+                                <th>Company name</th>
+                                <th>Formula</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($pharmacy_details as $pharmacy): ?>
+                                <tr>
+                                    <td><?php echo $pharmacy['drug_Trade_name']; ?></td>
+                                    <td><?php echo $pharmacy['price'], "$"; ?></td>
+                                    <td><?php echo $pharmacy['company_name']; ?></td>
+                                    <td><?php echo $pharmacy['formula']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php elseif ($user_role == 'admin'): ?>
+                    <h1>Admin Dashboard</h1>
+
+
+                    <h2>Patients Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SSN</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Age</th>
+                                <th>Primary Physician</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($patient_details as $patient): ?>
+                                <tr>
+                                    <td><?php echo $patient['ssn']; ?></td>
+                                    <td><?php echo $patient['name']; ?></td>
+                                    <td><?php echo $patient['address']; ?></td>
+                                    <td><?php echo $patient['Age']; ?> years</td>
+                                    <td><?php echo $patient['Pri_physician_ssn']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <h2>Doctors Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SSN</th>
+                                <th>Name</th>
+                                <th>Experience</th>
+                                <th>Specialization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($doctor_details as $doctor): ?>
+                                <tr>
+                                    <td><?php echo $doctor['ssn']; ?></td>
+                                    <td><?php echo $doctor['doctor_name']; ?></td>
+                                    <td><?php echo $doctor['Years_exp']; ?> years</td>
+                                    <td><?php echo $doctor['specialization']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <h2>Company Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($company_details as $company): ?>
+                                <tr>
+                                    <td><?php echo $company['name']; ?></td>
+                                    <td><?php echo $company['Phone_number']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <h2>Pharmacy Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($pharmacy_details as $pharmacy): ?>
+                                <tr>
+                                    <td><?php echo $pharmacy['name']; ?></td>
+                                    <td><?php echo $pharmacy['address']; ?></td>
+                                    <td><?php echo $pharmacy['Phone_number']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <h2>Transactioms</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Drug Name</th>
+                                <th>Company Name</th>
+                                <th>Pharmacy Name</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($sells_details as $sells): ?>
+                                <tr>
+                                    <td><?php echo $sells['drug_Trade_name']; ?></td>
+                                    <td><?php echo $sells['company_name']; ?></td>
+                                    <td><?php echo $sells['pharmacy_name']; ?></td>
+                                    <td><?php echo $sells['price'], "$"; ?></td>
+    
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <h2>Prescriptions</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient SSN</th>
+                                <th>Doctor SSN</th>
+                                <th>Drug Trade name</th>
+                                <th>Company Name</th>
+                                <th>Date</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($prescribes_details as $prescribes): ?>
+                                <tr>
+                                    <td><?php echo $prescribes['patient_ssn']; ?></td>
+                                    <td><?php echo $prescribes['doctor_ssn']; ?></td>
+                                    <td><?php echo $prescribes['drug_Trade_name']; ?></td>
+                                    <td><?php echo $prescribes['company_name']; ?></td>
+                                    <td><?php echo $prescribes['date']; ?></td>
+                                    <td><?php echo $prescribes['qty']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
                 <?php endif; ?>
             </section>
         </div>

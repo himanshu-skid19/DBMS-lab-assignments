@@ -183,3 +183,25 @@ JOIN
 	pharmacy pa ON s.pharmacy_name = pa.name
 
 ```
+
+
+```sql
+CREATE VIEW PharmacyDetails AS
+SELECT
+	ph.name,
+    ph.address,
+    ph.Phone_number,
+    s.drug_Trade_name,
+    s.company_name,
+    s.price,
+    d.formula
+    
+FROM
+ 	pharmacy ph
+JOIN
+	sells s ON ph.name = s.pharmacy_name
+JOIN
+	drug d ON s.drug_Trade_name = d.Trade_name
+
+
+```
