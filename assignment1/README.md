@@ -155,3 +155,31 @@ JOIN
 JOIN
 	pharmaceutical_company c ON d.Company_name = c.name
 ```
+
+
+```sql
+CREATE VIEW CompanyDetails AS
+SELECT
+ 	p.name,
+    p.Phone_number as company_phone,
+    pr.drug_Trade_name,
+    pr.date,
+    pr.qty,
+ 	d.formula,
+    s.pharmacy_name,
+    s.price,
+    pa.address,
+    pa.Phone_number as pharmacy_phone
+    
+FROM
+ 	pharmaceutical_company p
+JOIN
+	prescribes pr ON p.name = pr.company_name
+JOIN
+	drug d ON pr.drug_Trade_name = d.Trade_name
+JOIN
+	sells s ON d.Trade_name = s.drug_Trade_name AND d.Company_name = s.company_name
+JOIN
+	pharmacy pa ON s.pharmacy_name = pa.name
+
+```

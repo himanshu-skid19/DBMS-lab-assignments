@@ -33,6 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             case 'patient':
                 header('Location: patient_register.html');
                 break;
+            case 'company':
+                header('Location: company_register.php');
+                break;
             case 'admin':
                 header('Location: admin_register.html');
                 break;

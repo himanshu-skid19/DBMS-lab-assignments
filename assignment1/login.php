@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
 
-    $sql = $conn->prepare("SELECT id, password_hash, role FROM users WHERE username = ?");
+    $sql = $conn->prepare("SELECT * FROM users WHERE username = ?");
     $sql->bind_param("s", $username);
     $sql->execute();
     $result = $sql->get_result();
@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $row['password_hash'])) {
             $_SESSION['id'] = $row['id'];
             $_SESSION['role'] = $row['role'];
+            $_SESSION['name'] = $row['name'];
+            
             header('Location: home.php');
         } else {
             echo "Invalid username or password";
