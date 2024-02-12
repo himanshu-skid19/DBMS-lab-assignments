@@ -202,7 +202,7 @@ $conn->close();
             <li><strong>HomePage</strong></li>
         </ul>
         <ul>
-            <li><a href="#" role="button">About</a></li>
+            <li><a href="about.html" role="button">About</a></li>
         </ul>
     </nav>
     <main class="container">
