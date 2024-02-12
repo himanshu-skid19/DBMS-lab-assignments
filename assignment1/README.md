@@ -214,7 +214,11 @@ SELECT
     s.drug_Trade_name,
     s.company_name,
     s.price,
-    d.formula
+    d.formula,
+    cw.start_date,
+    cw.end_date,
+    cw.text,
+    cw.supervisor_name
     
 FROM
  	pharmacy ph
@@ -222,6 +226,8 @@ JOIN
 	sells s ON ph.name = s.pharmacy_name
 JOIN
 	drug d ON s.drug_Trade_name = d.Trade_name
+JOIN
+	contracts_with cw ON cw.pharmacy_name = ph.name
 
 
 ```

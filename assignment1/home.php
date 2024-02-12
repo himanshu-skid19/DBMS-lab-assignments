@@ -58,6 +58,20 @@ if ($user_role == 'patient'){
     echo "No user found with that username";
     
     }
+    $sql = $conn->prepare("SELECT * FROM pharmacydetails WHERE company_name = ?");
+    $sql->bind_param("s", $user_name);
+    $sql->execute();
+    $result = $sql->get_result();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $pharmacy_details[] = $row;
+        }
+
+    } else {
+    echo "No user found with that username";
+    
+    }
+
 
 
 } else if ($user_role == "pharmacy"){
@@ -148,6 +162,19 @@ if ($user_role == 'patient'){
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $prescribes_details[] = $row;
+        }
+    } else {
+        echo "No user found with that username";
+    }
+
+    #getting from contracts
+    $sql = $conn->prepare("SELECT * FROM contracts_with");
+    $sql->execute();
+    $result = $sql->get_result();
+    $contracts = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $contracts[] = $row;
         }
     } else {
         echo "No user found with that username";
@@ -305,38 +332,58 @@ $conn->close();
                         <p><strong>Name:</strong> <?php echo $user_name; ?></p>
                         <p><strong>Phone Number:</strong> <?php echo $company_details[0]['company_phone']; ?></p>
                     </div>
-                    <h2>Company Details</h2>
+                    <h2>Transactions</h2>
                     <table>
                         <thead>
                             <tr>
                                 <th>Drug Name</th>
+                                <th>Pharmacy Name</th>
                                 <th>Date</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
-                                <th>Pharmacy name</th>
                                 <th>Formula</th>
-                                <th>Pharmacy Address</th>
-                                <th>Pharmacy Phone</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($company_details as $company): ?>
                                 <tr>
                                     <td><?php echo $company['drug_Trade_name']; ?></td>
+
+                                    <td><?php echo $company['pharmacy_name']; ?></td>
                                     <td><?php echo $company['date']; ?></td>
                                     <td><?php echo $company['qty']; ?></td>
                                     <td><?php echo $company['price'], "$"; ?></td>
-                                    <td><?php echo $company['pharmacy_name']; ?></td>
                                     <td><?php echo $company['formula']; ?></td>
-                                    <td><?php echo $company['address']; ?></td>
-                                    <td><?php echo $company['pharmacy_phone']; ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <h2>Contracts</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pharmacy Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Text</th>
+                                <th>Supervisor Name</th>
+                            </th>
+                            </thead>
+                        <tbody>
+                            <?php foreach ($pharmacy_details as $pharmacy): ?>
+                                <tr>
+                                    <td><?php echo $pharmacy['name']; ?></td>
+                                    <td><?php echo $pharmacy['start_date']; ?></td>
+                                    <td><?php echo $pharmacy['end_date']; ?></td>
+                                    <td><?php echo $pharmacy['text']; ?></td>
+                                    <td><?php echo $pharmacy['supervisor_name']; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
 
                 <?php elseif ($user_role == 'pharmacy'): ?>
-                    <h1>Your Details</h1>
+                    <h1>Pharmacy Details</h1>
                     <div class="card">
                         <p><strong>Name:</strong> <?php echo $user_name; ?></p>
                         <p><strong>Phone Number:</strong> <?php echo $pharmacy_details[0]['Phone_number']; ?></p>
@@ -362,6 +409,29 @@ $conn->close();
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <h2>Contracts</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Text</th>
+                                <th>Supervisor Name</th>
+                            </th>
+                            </thead>
+                        <tbody>
+                            <?php foreach ($pharmacy_details as $pharmacy): ?>
+                                <tr>
+                                    <td><?php echo $pharmacy['company_name']; ?></td>
+                                    <td><?php echo $pharmacy['start_date']; ?></td>
+                                    <td><?php echo $pharmacy['end_date']; ?></td>
+                                    <td><?php echo $pharmacy['text']; ?></td>
+                                    <td><?php echo $pharmacy['supervisor_name']; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>                
                 <?php elseif ($user_role == 'admin'): ?>
                     <h1>Admin Dashboard</h1>
 
@@ -493,6 +563,33 @@ $conn->close();
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
+                        </table>
+                <h2>Contracts</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pharmacy Name</th>
+                                <th>Company Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Text</th>
+                                <th>Supervisor Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contracts as $contracts): ?>
+                                <tr>
+                                    <td><?php echo $contracts['pharmacy_name']; ?></td>
+                                    <td><?php echo $contracts['company_name']; ?></td>
+                                    <td><?php echo $contracts['start_date']; ?></td>
+                                    <td><?php echo $contracts['end_date']; ?></td>
+                                    <td><?php echo $contracts['text']; ?></td>
+                                    <td><?php echo $contracts['supervisor_name']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        </table>
+                        
                 <?php endif; ?>
             </section>
         </div>
