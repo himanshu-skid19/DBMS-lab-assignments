@@ -26,7 +26,7 @@ CREATE TABLE `patient` (
   `name` varchar(255) DEFAULT NULL,
   `address` text DEFAULT NULL,
   `Age` int(11) DEFAULT NULL,
-  `Pri_physician_ssn` varchar(255) DEFAULT NULL,
+  `Pri_physician_ssn` varchar(255) DEFAULT NOT NULL,
   PRIMARY KEY (`ssn`),
   KEY `Pri_physician_ssn` (`Pri_physician_ssn`),
   CONSTRAINT `patient_ibfk_1` FOREIGN KEY (`Pri_physician_ssn`) REFERENCES `doctor` (`ssn`)
@@ -112,12 +112,30 @@ CREATE TABLE `sells` (
 ```
 
 
+### Contracts_with
+```sql
+CREATE TABLE `contracts_with` (
+  `pharmacy_name` varchar(255) NOT NULL,
+  `company_name` varchar(255) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date,
+  `text` text,
+  `supervisor_name` varchar(255),
+  PRIMARY KEY (`pharmacy_name`, `company_name`),
+  FOREIGN KEY (`pharmacy_name`) REFERENCES `pharmacy` (`name`),
+  FOREIGN KEY (`company_name`) REFERENCES `pharmaceutical_company` (`name`)
+)
+```
 
 
 
+## Views
 
-### Views
+To facilitate the operation of only viewing what the user's authorization allows you to, you must create several views. For example, a patient must only be able to view details related to him such as his physician's details (anything that is not sensitive) and his prescriptions. 
 
+Given below are commands to create several views based on the role of the user.
+
+### Patient View
 ```sql
 CREATE VIEW PatientDetails AS
 SELECT
@@ -156,6 +174,7 @@ JOIN
 	pharmaceutical_company c ON d.Company_name = c.name
 ```
 
+### Company View
 
 ```sql
 CREATE VIEW CompanyDetails AS
@@ -184,6 +203,7 @@ JOIN
 
 ```
 
+### Pharmacy Details
 
 ```sql
 CREATE VIEW PharmacyDetails AS

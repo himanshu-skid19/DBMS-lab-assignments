@@ -175,7 +175,6 @@ $conn->close();
             <li><strong>HomePage</strong></li>
         </ul>
         <ul>
-            <li><a href="#">Home</a></li>
             <li><a href="#" role="button">About</a></li>
         </ul>
     </nav>
