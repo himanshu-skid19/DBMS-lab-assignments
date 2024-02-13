@@ -202,7 +202,13 @@ $conn->close();
             <li><strong>HomePage</strong></li>
         </ul>
         <ul>
+            
             <li><a href="about.html" role="button">About</a></li>
+            <li>
+                <form action="logout.php" method="post">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
         </ul>
     </nav>
     <main class="container">

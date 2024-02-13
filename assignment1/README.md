@@ -1,11 +1,34 @@
 # Hospital Management System
+#### Created by Himanshu Singhal, 220150004
+
 
 This code is a simple demonstration of how you can create a database from an ER diagram and demonstrate using a frontend how you can use views to only show data relevant to a user based on his role
+
+## Data for Testing Purposes
+To make testing easier, you can use the following user id and password to login and check the data that is displayed based on the user's role.
+
+1. Patient
+    - Username: himanshu-skid19
+    - Password: 123
+2. Doctor
+    - Username: jl123
+    - Password: 123
+3. Company
+    - Username: kim123
+    - Password: 123
+4. Pharmacy
+    - Username: daisy123
+    - Password: 123
+5. Admin
+    - Username: h.singhal
+    - Password: 123
 
 ## Getting Started
 1. Before you do anything in this code, you must start a MySQL and Apache server using XAMPP.
 
 2. Next you must run the following commands to create the tables needed for to run this ER diagram.
+
+3. Or you can alternatively import the `hospital.sql` file into your MySQL server.
 
 ### Doctor
 ```sql
@@ -174,32 +197,44 @@ JOIN
 	pharmaceutical_company c ON d.Company_name = c.name
 ```
 
+### Doctor View
+```sql
+CREATE VIEW `doctordetails` AS
+ SELECT
+  `d`.`ssn` AS `ssn`, `d`.`doctor_name` AS `doctor_name`, `d`.`specialization` AS `specialization`, `d`.`Years_exp` AS `Years_exp`, `p`.`name` AS `name`, `p`.`address` AS `address`, `p`.`Age` AS `Age`, `pr`.`drug_Trade_name` AS `drug_Trade_name`, `pr`.`company_name` AS `company_name`, `pr`.`date` AS `date`, `pr`.`qty` AS `qty`, `dr`.`formula` AS `formula`, `s`.`pharmacy_name` AS `pharmacy_name`, `s`.`price` AS `price`, `pa`.`address` AS `PharmacyAddress`, `pa`.`Phone_number` AS `PharmacyPhoneNumber`, `c`.`Phone_number` AS `CompanyPhoneNumber` FROM ((((((`doctor` `d` join `patient` `p` on(`p`.`Pri_physician_ssn` = `d`.`ssn`)) join `prescribes` `pr` on(`d`.`ssn` = `pr`.`doctor_ssn`)) join `drug` `dr` on(`pr`.`drug_Trade_name` = `dr`.`Trade_name`)) join `sells` `s` on(`dr`.`Trade_name` = `s`.`drug_Trade_name` and `dr`.`Company_name` = `s`.`company_name`)) join `pharmacy` `pa` on(`s`.`pharmacy_name` = `pa`.`name`)) join `pharmaceutical_company` `c` on(`dr`.`Company_name` = `c`.`name`)) ;
+
+
 ### Company View
 
 ```sql
-CREATE VIEW CompanyDetails AS
+CREATE VIEW doctordetails AS
 SELECT
- 	p.name,
-    p.Phone_number as company_phone,
-    pr.drug_Trade_name,
-    pr.date,
-    pr.qty,
- 	d.formula,
-    s.pharmacy_name,
-    s.price,
-    pa.address,
-    pa.Phone_number as pharmacy_phone
-    
+  d.ssn,
+  d.doctor_name,
+  d.specialization,
+  d.Years_exp,
+  p.name,
+  p.address,
+  p.Age,
+  pr.drug_Trade_name,
+  pr.company_name,
+  pr.date,
+  pr.qty,
+  dr.formula,
+  s.pharmacy_name,
+  s.price,
+  pa.address AS PharmacyAddress,
+  pa.Phone_number AS PharmacyPhoneNumber,
+  c.Phone_number AS CompanyPhoneNumber
 FROM
- 	pharmaceutical_company p
-JOIN
-	prescribes pr ON p.name = pr.company_name
-JOIN
-	drug d ON pr.drug_Trade_name = d.Trade_name
-JOIN
-	sells s ON d.Trade_name = s.drug_Trade_name AND d.Company_name = s.company_name
-JOIN
-	pharmacy pa ON s.pharmacy_name = pa.name
+  ((((((doctor d
+JOIN patient p ON p.Pri_physician_ssn = d.ssn)
+JOIN prescribes pr ON d.ssn = pr.doctor_ssn)
+JOIN drug dr ON pr.drug_Trade_name = dr.Trade_name)
+JOIN sells s ON dr.Trade_name = s.drug_Trade_name AND dr.Company_name = s.company_name)
+JOIN pharmacy pa ON s.pharmacy_name = pa.name)
+JOIN pharmaceutical_company c ON dr.Company_name = c.name);
+
 
 ```
 
