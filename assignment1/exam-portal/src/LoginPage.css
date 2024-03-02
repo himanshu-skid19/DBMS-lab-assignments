@@ -1,0 +1,120 @@
+/* This will reset any default margins and paddings, and set box-sizing to border-box for the entire document */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern font */
+    background-color: #f4f4f4; /* Light grey background */
+}
+
+/* Styling the navigation bar */
+.navbar {
+    background-color: #333333; /* Dark grey */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.navbar a:hover {
+    background-color: #444444; /* Slightly lighter grey for hover */
+}
+
+/* A wrapper for the main content to give padding equal to the navbar height */
+.main-content {
+    padding-top: 50px; /* Adjust this value to match your navbar's height */
+    height: calc(100% - 50px); /* Adjust this value to match your navbar's height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding-left: 550px; */
+}
+
+/* Styling for the login container */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 50px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
+    border-radius: 8px;
+    text-align: center;
+    
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    text-align: left;
+    font-weight: bold;
+    color: #ff4500; /* Orange-red for labels */
+}
+
+input[type=email], input[type=password] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #eaeaea; /* Lighter grey for input background */
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #333333; /* Dark grey */
+    color: white;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #444444; /* Slightly lighter grey for hover */
+}
+
+a {
+    color: #ff4500; /* Orange-red for links */
+    text-decoration: none;
+    font-size: 14px;
+}
+
+a:hover {
+    color: #e63900; /* A darker shade of orange-red for hover */
+}
+
+.head {
+    color: #e63900; /* A darker shade of orange-red for hover */
+}
+
+.normaltext{
+    color: #333333; /* Dark grey */
+    font-size: 24px;
+}
+
+.showpass{
+    color: #333333; /* Dark grey */
+    font-size: 14px;
+    text-align: left;
+}
