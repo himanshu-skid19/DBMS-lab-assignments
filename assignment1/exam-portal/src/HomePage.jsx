@@ -7,6 +7,27 @@ function HomePage() {
     const [userInfo, setUserInfo] = useState(null);
     const navigate = useNavigate(); // Hook for navigation
     
+    useEffect(() => {
+        // Fetch user info on component mount
+        const fetchUserInfo = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/get-user-info', {
+                    method: 'GET',
+                    credentials: 'include', // Necessary for cookies to be sent
+                });
+                const responseData = await response.json();
+                if (responseData.status === 'success') {
+                    setUserInfo(responseData.user);
+                } else {
+                    console.error('Failed to fetch user info');
+                }
+            } catch (error) {
+                console.error('There was an error fetching user info!', error);
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -25,25 +46,64 @@ function HomePage() {
         }
     };
 
+    const handleExamRegister = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/exam-register', { // Adjust URL as needed
+                method: 'POST',
+                credentials: 'include'
+                
+            });
+            const responseData = await response.json();
+            if (responseData.status === 'success') {
+                // Optionally clear any client-side state here
+                navigate('/exam-register'); // Redirect to login page or wherever appropriate
+            } else {
+                console.error('Exam registration failed');
+            }
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    }
+
+    const handleAnalytics = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/analytics', { // Adjust URL as needed
+                method: 'POST',
+            });
+            const responseData = await response.json();
+            if (responseData.status === 'success') {
+                // Optionally clear any client-side state here
+                navigate('/analytics'); // Redirect to login page or wherever appropriate
+            } else {
+                console.error('Exam registration failed');
+            }
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    }
+
   return (
     <>
       <div className="navbar">
             <a href="#">Home</a>
             {/* Add more navigation items as needed */}
-            <button onClick={handleLogout}>Logout</button> {/* Logout Button */}
+            <a onClick={handleLogout}>Logout</a> {/* Logout Button */}
           </div>
-      <div className="main-content">
+      <div className="header">
         {/* Display user information if available */}
         {userInfo && (
           <div>
-            <h2>Welcome, {userInfo.name}</h2>
+            <h4>Welcome, {userInfo.name}</h4>
             {/* Display other user info as needed */}
           </div>
         )}
+        </div>
+      <div className="main-content">
+        
         <section className="analytics-section">
           <h2>View Analytics</h2>
           <p>See your performance and areas to improve.</p>
-          <Link to="/analytics">Go to Analytics</Link>
+          <button onClick={handleAnalytics}>Go to Analytics</button>
         </section>
 
         <section className="exam-section">
@@ -53,8 +113,10 @@ function HomePage() {
         </section>
 
         <section className="user-info-section">
-          <h2>User Information</h2>
-          <Link to="/userinfo">View User Information</Link>
+          <h2>Exam Registration</h2>
+          <button onClick={handleExamRegister}>Register Exam</button>
+          <button>View Your Schedule</button>
+          
         </section>
       </div>
     </>

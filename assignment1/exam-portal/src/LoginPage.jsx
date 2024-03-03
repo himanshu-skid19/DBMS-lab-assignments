@@ -27,6 +27,7 @@ function LoginPage() {
                 headers: {
                     'Content-Type': 'application/json', // Ensure we're sending JSON
                 },
+                credentials: 'include', // Include credentials in the request
                 body: JSON.stringify({
                     email: formData.email,
                     password: formData.password,

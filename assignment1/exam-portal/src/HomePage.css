@@ -47,13 +47,20 @@ body, html {
     padding-left:200px;
 }
 
+.header {
+    padding: 20px;
+    text-align: center;
+    color: black;
+    font-size: 30px;
+}
+
 /* Styling for the login container */
 .exam-section {
     width: 100%;
     max-width: 400px;
     padding: 100px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
+    background-color: #f4f4f4;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Lighter shadow for a softer look */
     border-radius: 8px;
     text-align: center;
     
@@ -63,8 +70,8 @@ body, html {
     width: 100%;
     max-width: 400px;
     padding: 100px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
+    background-color: #f4f4f4;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Lighter shadow for a softer look */
     border-radius: 8px;
     text-align: center;
     
@@ -75,8 +82,8 @@ body, html {
     width: 100%;
     max-width: 400px;
     padding: 100px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
+    background-color: #f4f4f4;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Lighter shadow for a softer look */
     border-radius: 8px;
     text-align: center;
     
@@ -109,6 +116,7 @@ button {
     padding: 10px;
     border: none;
     border-radius: 5px;
+    margin: 10px;
     cursor: pointer;
     background-color: #333333; /* Dark grey */
     color: white;
@@ -118,6 +126,7 @@ button {
 button:hover {
     background-color: #444444; /* Slightly lighter grey for hover */
 }
+
 
 a {
     color: #ff4500; /* Orange-red for links */

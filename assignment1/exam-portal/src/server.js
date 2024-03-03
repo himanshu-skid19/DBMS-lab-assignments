@@ -65,9 +65,28 @@ app.post('/register', (req, res) => {
   });
 });
 
+app.post('/register2', (req, res) => {
+  const { name, role, studentID, phone } = req.body;
+
+  if (role == 'student') {
+    // Use the hashed password in the INSERT query
+    const sql = "INSERT INTO student (sid, sname, Phone_number) VALUES (?, ?, ?)";
+    connection.query(sql, [studentID, name, phone], (error, results) => {
+      if (error) {
+        console.error('Error executing query:', error);
+        res.status(500).json({ status: 'error', message: 'Registration failed' });
+        return;
+      }
+      res.json({ status: 'success', message: 'Registration successful' });
+    });
+  }
+
+  });
+
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const sql = "SELECT * FROM users WHERE email = ?";
+  const sql = "SELECT * FROM studentdetails WHERE email = ?";
   connection.query(sql, [email], (error, results) => {
     if (error) {
       console.error('Error executing query:', error);
@@ -91,15 +110,61 @@ app.post('/login', (req, res) => {
 
       if (result) {
         // Store user information in session
-        req.session.user = { id: user.id, name: user.name, email: user.email, role: user.role };
+        req.session.user = { id: user.sid, name: user.name, email: user.email, role: user.role };
+        // console.log('User set in session:', req.session.user); // Add this line to log the session user
+   
         res.json({ status: 'success', message: 'Login successful', user: { name: user.name, email: user.email, role: user.role } });
-        res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ message: 'Session started...' }));
 
       } else {
         res.status(401).json({ status: 'error', message: 'Invalid email or password' });
       }
     });
+  });
+});
+
+app.post('/register-for-exam', (req, res) => {
+  const { did } = req.body;
+  console.log(req.session.user)
+  // Ensure the user is logged in and has a session
+  if (req.session.user && req.session.user.id) {
+    const sql = "INSERT INTO exam_choices (sid, did) VALUES (?, ?)";
+    connection.query(sql, [req.session.user.id, did], (error, results) => {
+      if (error) {
+        console.error('Error executing query:', error);
+        res.status(500).json({ status: 'error', message: 'Registration failed' });
+        return;
+      }
+      res.json({ status: 'success', message: 'Registration successful' });
+    });
+  } else {
+    // If there is no user in session, send an error message
+    res.status(401).json({ status: 'error', message: 'You must be logged in to register for an exam' });
+  }
+});
+
+app.get('/get-user-info', (req, res) => {
+  // Check if there's a user in the session]
+  console.log(req.session.user)
+  if (req.session.user) {
+    res.json({ status: 'success', user: req.session.user });
+  } else {
+    // If no user is in session, return an error or empty user
+    res.status(401).json({ status: 'error', message: 'No user logged in' });
+  }
+});
+
+app.post('/exam-register', (req, res) => {
+  console.log(req.session.user)
+  const sql = "SELECT  * FROM exam_schedule_view";
+  connection.query(sql, (error, results) => {
+    if (error) {
+      console.error('Error fetching exams:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to fetch exams' });
+      return;
+    }
+    // console.log(results);
+    res.json({ status: 'success', data: results });
   });
 });
 

@@ -57,7 +57,7 @@ body, html {
     width: 100%; /* Ensure the columns take full width of the form */
 }
 
-.left-column, .right-column {
+.left-column, .middle-column, .right-column {
     flex: 1;
     min-width: 250px; /* Minimum width to prevent fields from being too narrow */
     padding: 10px; /* Space between columns */
@@ -85,7 +85,7 @@ body, html {
       flex-direction: column;
     }
 
-    .left-column, .right-column {
+    .left-column, .middle-column, .right-column {
         min-width: 0; /* Remove min-width to allow full width in smaller screens */
     }
 }

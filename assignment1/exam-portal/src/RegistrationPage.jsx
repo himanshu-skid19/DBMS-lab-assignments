@@ -11,6 +11,8 @@ function RegistrationPage() {
     role: '',
     studentID: '',
     phone: '',
+    evaluatorID: '',
+    evaluatorPhone: '',
   });
 
   const handleChange = (e) => {
@@ -42,6 +44,29 @@ function RegistrationPage() {
               email: formData.email,
               password: formData.password,
               role: formData.role,
+                studentID: formData.studentID,
+                phone: formData.phone,
+            }),
+          });
+  
+      const responseData = await response.json(); // Assuming the response is JSON
+      console.log(responseData);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+
+    try {
+        const response = await fetch('http://localhost:3001/register2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: formData.name,
+              role: formData.role,
+                studentID: formData.studentID,
+                phone: formData.phone,
+              
             }),
           });
   
@@ -51,6 +76,8 @@ function RegistrationPage() {
       console.error('There was an error!', error);
     }
   };
+
+
 
   return (
     <>
@@ -86,15 +113,14 @@ function RegistrationPage() {
                   <select className="input-field2" id="role" name="role" value={formData.role} onChange={handleChange} required>
                     <option value="">Select a role</option>
                     <option value="student">Student</option>
-                    <option value="teacher">Evaluator</option>
-                    <option value="administrator">Administrator</option>
+                    <option value="evaluator">Evaluator</option>
                   </select>
                 </div>
               </div>
   
               {/* Conditional fields for "Student" */}
               {formData.role === 'student' && (
-                <div className='right-column'>
+                <div className='middle-column'>
                   <div className="form-group">
                     <label htmlFor="student-id">Student ID:</label>
                     <input className="input-field" type="text" id="student-id" name="studentID" value={formData.studentID} onChange={handleChange} required />
@@ -105,6 +131,19 @@ function RegistrationPage() {
                   </div>
                 </div>
               )}
+              {formData.role === 'evaluator' && (
+                <div className='middle-column'>
+                  <div className="form-group">
+                    <label htmlFor="evaluator-id">Evaluator ID:</label>
+                    <input className="input-field" type="text" id="evaluator-id" name="evaluatorID" value={formData.evaluatorID} onChange={handleChange} required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="phone">Phone:</label>
+                    <input className="input-field" type="text" id="phone" name="phone" value={formData.evaluatorPhonehone} onChange={handleChange} required />
+                  </div>
+                </div>
+              )}
+              
             </div>
   
             <button type="submit" className="submit-button">Register</button>
