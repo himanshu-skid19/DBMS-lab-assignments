@@ -1,0 +1,91 @@
+.navbar {
+    background-color: #333333;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern font */
+    background-color: #f4f4f4; /* Light grey background */
+    color: black;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.navbar a:hover {
+    background-color: #444444;
+}
+
+.main-content {
+    padding-top: 50px; /* Adjusted to ensure content is below the navbar */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed to flex-start to align content to the top */
+    width: 100%;
+    padding: 60px 20px 0; /* Added horizontal padding and top padding */
+}
+
+.registration-container {
+    width: 100%; /* Adjusted width for responsiveness */
+    max-width: 800px; /* Max width to prevent the form from being too wide */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Added padding */
+    box-sizing: border-box; /* Ensure padding doesn't affect overall width */
+}
+
+.registration-form {
+    display: flex;
+    flex-wrap: wrap; /* Allow the form to wrap columns */
+    justify-content: center; /* Center the columns */
+}
+
+.form-columns {
+    display: flex;
+    flex-direction: row;
+    width: 100%; /* Ensure the columns take full width of the form */
+}
+
+.left-column, .right-column {
+    flex: 1;
+    min-width: 250px; /* Minimum width to prevent fields from being too narrow */
+    padding: 10px; /* Space between columns */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box; /* Ensure padding doesn't affect overall width */
+    color:black;
+}
+
+.input-field2 {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box; /* Ensure padding doesn't affect overall width */
+}
+
+@media (max-width: 768px) {
+    .form-columns {
+      flex-direction: column;
+    }
+
+    .left-column, .right-column {
+        min-width: 0; /* Remove min-width to allow full width in smaller screens */
+    }
+}

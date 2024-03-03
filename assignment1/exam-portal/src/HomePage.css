@@ -9,6 +9,7 @@ body, html {
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern font */
     background-color: #f4f4f4; /* Light grey background */
+    color: black;
 }
 
 /* Styling the navigation bar */
@@ -38,19 +39,42 @@ body, html {
 /* A wrapper for the main content to give padding equal to the navbar height */
 .main-content {
     padding-top: 30px; /* Adjust this value to match your navbar's height */
-    height: calc(100%); /* Adjust this value to match your navbar's height */
+    height: calc(100% - 50px); /* Adjust this value to match your navbar's height */
     display:flex;
     justify-content: center;
     align-items: center;
-    padding-left: 550px;
+    padding-right: 200px;
+    padding-left:200px;
 }
 
 /* Styling for the login container */
-.login-container {
+.exam-section {
     width: 100%;
     max-width: 400px;
-    padding: 40px;
-    padding-top: 100px;
+    padding: 100px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
+    border-radius: 8px;
+    text-align: center;
+    
+}
+
+.analytics-section {
+    width: 100%;
+    max-width: 400px;
+    padding: 100px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
+    border-radius: 8px;
+    text-align: center;
+    
+}
+
+
+.user-info-section {
+    width: 100%;
+    max-width: 400px;
+    padding: 100px;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for a softer look */
     border-radius: 8px;
