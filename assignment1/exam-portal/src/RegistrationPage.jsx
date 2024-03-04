@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './RegistrationPage.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 function RegistrationPage() {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ function RegistrationPage() {
     evaluatorID: '',
     evaluatorPhone: '',
   });
-
+  const navigate = useNavigate(); // Hook for navigation
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -72,9 +73,16 @@ function RegistrationPage() {
   
       const responseData = await response.json(); // Assuming the response is JSON
       console.log(responseData);
+      if (responseData.status === 'success') {
+        // Optionally clear any client-side state here
+        navigate('/login'); // Redirect to login page or wherever appropriate
+    } else {
+        console.error('Registration failed');
+    }
     } catch (error) {
       console.error('There was an error!', error);
     }
+    
   };
 
 

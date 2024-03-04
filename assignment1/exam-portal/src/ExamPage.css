@@ -1,0 +1,107 @@
+.exam-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f9f9f9;
+  }
+  
+  .timer {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #eef;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .question-container {
+    margin-bottom: 20px;
+  }
+  
+  .question-container h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .question-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .question-container ul li {
+    margin-bottom: 10px;
+  }
+  
+  .question-container input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .exam-page {
+    display: flex;
+  }
+  
+  .question-sidebar {
+    flex: 1;
+    max-width: 100px; /* Adjust based on preference */
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .question-number {
+    margin-bottom: 5px;
+    background-color: #cccccc;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  .question-number:hover {
+    background-color: #7d7d7d; /* Light hover effect for unanswered questions */
+  }
+  
+  .question-number.answered {
+    background-color: #4CAF50; /* Green color when a question has been answered */
+    color: white; /* Ensures text is easily readable on green background */
+  }
+  
+  .question-number.answered:hover {
+    background-color: #388E3C; /* Darker green on hover for answered questions */
+  }
+  
+  .exam-container {
+    flex: 4;
+    padding: 20px;
+  }
+  
+  .submit-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #dc3545; /* Red color to distinguish it as a submit action */
+  }
+  
+  .submit-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  

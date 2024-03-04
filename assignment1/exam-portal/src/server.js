@@ -168,6 +168,77 @@ app.post('/exam-register', (req, res) => {
   });
 });
 
+app.post('/stud-schedule', (req, res) => {
+  console.log(req.session.user)
+  const sql = "SELECT  * FROM student_schedule where sid = ? ";
+  connection.query(sql, [req.session.user.id] ,(error, results) => {
+    if (error) {
+      console.error('Error fetching exams:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to fetch exams' });
+      return;
+    }
+    // console.log(results);
+    res.json({ status: 'success', data: results });
+  });
+});
+
+app.post('/start-exam', (req, res) => {
+  const {did : examId} = req.body;
+
+  if (!req.session.user){
+    return res.status(401).json({ status: 'error', message: 'You must be logged in to start an exam' });
+  }
+
+  const examDetails = {
+    id: examId,
+    startTime: Date.now(),
+    duration: 60
+  };
+
+  req.session.exam = examDetails;
+  res.json({ status: 'success', message: 'Exam started', examDetails });
+
+});
+
+app.get('/get-exam-questions', (req, res) => {
+  if (!req.session.user || !req.session.exam) {
+      return res.status(401).json({ status: 'error', message: 'User not logged in or exam not started' });
+  }
+  const { startTime, duration } = req.session.exam;
+
+  // Example validation: Check if the current time is within the exam duration
+  const currentTime = Date.now();
+  const examEndTime = req.session.exam.startTime + req.session.exam.duration;
+
+  if (currentTime > examEndTime) {
+      return res.status(403).json({ status: 'error', message: 'Exam time is over' });
+  }
+
+  // Fetch and send an exam question...
+  res.json({ status: 'success',
+  duration,
+  data:[
+    {
+      qid: '1',
+      question: 'What is 2+2?',
+      options: ['1', '2', '3', '4']
+    },
+    {
+      qid: '2',
+      question: 'What is 1+1?',
+      options: ['1', '2', '3', '4']
+    }
+  ] }); // Simplified example
+});
+
+app.post('/end-exam', (req, res) => {
+  if (req.session.exam) {
+      delete req.session.exam; // Remove exam details from session
+      return res.json({ status: 'success', message: 'Exam ended' });
+  }
+  res.status(400).json({ status: 'error', message: 'No exam to end' });
+});
+
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {

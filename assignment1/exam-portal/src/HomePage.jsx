@@ -81,6 +81,22 @@ function HomePage() {
             console.error('There was an error!', error);
         }
     }
+    const handleExam = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/stud-schedule', { // Adjust URL as needed
+                method: 'POST',
+                credentials: 'include'
+            });
+            const responseData = await response.json();
+            if (responseData.status === 'success') {
+                navigate('/stud-schedule'); 
+            } else {
+                console.error('Exam registration failed');
+            }
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    }
 
   return (
     <>
@@ -109,13 +125,12 @@ function HomePage() {
         <section className="exam-section">
           <h2>Take Exam</h2>
           <p>Start or continue your exams here. Best of luck!</p>
-          <button>Start Exam</button>
+          <button onClick={handleExam}>Start Exam</button>
         </section>
 
         <section className="user-info-section">
           <h2>Exam Registration</h2>
           <button onClick={handleExamRegister}>Register Exam</button>
-          <button>View Your Schedule</button>
           
         </section>
       </div>

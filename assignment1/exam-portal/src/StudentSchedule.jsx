@@ -3,7 +3,7 @@ import './ExamRegister.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function ExamRegister() {
+function StudentSchedule() {
   const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState(null);
   const [error, setError] = useState('');
@@ -12,7 +12,7 @@ function ExamRegister() {
   const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
-    axios.post('http://localhost:3001/exam-register', { withCredentials: true })
+    axios.post('http://localhost:3001/stud-schedule', { withCredentials: true })
       .then(response => {
         if (response.data.status === 'success') {
           setExams(response.data.data);
@@ -26,14 +26,13 @@ function ExamRegister() {
       });
   }, []);
 
-  const RegisterForExam = () => {
+  const StartExam = () => {
     if (selectedExam) {
-      axios.post('http://localhost:3001/register-for-exam', { did: selectedExam }, { withCredentials: true })
+      axios.post('http://localhost:3001/start-exam', { did: selectedExam }, { withCredentials: true })
       .then(response => {
         // Handle success response
         if(response.data.status === 'success') {
-          setSuccessMessage(response.data.message || 'Registration successful!');
-          setError(''); // Clear any previous errors
+            navigate('/start-exam'); // Redirect to exam page
         } else {
           // Handle case where user tries to register for an exam they're already registered for
           setError(response.data.message || 'Error registering for the exam.');
@@ -55,7 +54,7 @@ function ExamRegister() {
         {/* Additional navigation items here */}
       </div>
       <div className="registration-page">
-        <h1>Exam Registration</h1>
+        <h1>Exam Schedule</h1>
         {error && <p className="error">{error}</p>}
         {successMessage && <p className="success">{successMessage}</p>}
         <div className="exam-list-container">
@@ -65,7 +64,6 @@ function ExamRegister() {
                 <h2>{exam.ename}</h2>
                 <p>Date: {exam.Date}</p>
                 <p>Slot: {exam.Timeslot}</p>
-                <p>Fees: {exam.fees}</p>
               </div>
               <div>
                 <button className="exam-select-button" onClick={() => setSelectedExam(exam.did)}>
@@ -73,12 +71,12 @@ function ExamRegister() {
                 </button>
               </div>
             </div>
-          )) : <p>No exams available to register for at this time.</p>}
+          )) : <p>You haven't registered for any exams yet.</p>}
         </div>
         {selectedExam && (
           <div>
-            <h2>You have selected exam ID {selectedExam}. Ready to register?</h2>
-            <button onClick={RegisterForExam}>Register</button>
+            <h2>You have selected exam ID {selectedExam}. Ready to Start?</h2>
+            <button onClick={StartExam}>Start Exam</button>
           </div>
         )}
       </div>
@@ -86,4 +84,4 @@ function ExamRegister() {
   );
 };
 
-export default ExamRegister;
+export default StudentSchedule;
