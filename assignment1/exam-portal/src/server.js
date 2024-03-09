@@ -186,6 +186,7 @@ app.post('/stud-schedule', (req, res) => {
 app.post('/start-exam', (req, res) => {
   const {did : DateId, eid: ExamId} = req.body;
   console.log(DateId, ExamId);
+  console.log("user info: ",req.session.user)
 
   if (!req.session.user){
     return res.status(401).json({ status: 'error', message: 'You must be logged in to start an exam' });
@@ -255,6 +256,31 @@ app.get('/get-exam-questions', (req, res) => {
 
   });
 
+});
+
+app.post('/save-responses', (req, res) => {
+  if (!req.session.user){
+    return res.status(401).json({ status: 'error', message: 'You must be logged in to save responses' });
+  }
+
+  const { eid, sid, did, responses } = req.body;
+  const responseEntries = responses.map(response => [
+    eid,
+    req.session.user.id,
+    did,
+    response.qid,
+    JSON.stringify(response)
+  ]);
+
+  const sql = "INSERT INTO savedanswers (eid, sid, did, qid, response) VALUES ?";
+  connection.query(sql, [responseEntries], (error, results) => {
+    if (error) {
+      console.error('Error saving responses:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to save responses' });
+      return;
+    }
+    res.json({ status: 'success', message: 'Responses saved' });
+  });
 });
 
 app.post('/end-exam', (req, res) => {

@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './ExamPage.css';
+
 
 function ExamPage() {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0);
   const [timer, setTimer] = useState(3600);
+  const [responses, setResponses] = useState([]);
+  const [startTime, setStartTime] = useState(Date.now());
+  const navigate = useNavigate();
 
+  const location = useLocation();
+  const { eid, did } = location.state || {};
   useEffect(() => {
     fetchNextQuestion();
   }, []);
@@ -34,6 +42,10 @@ function ExamPage() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setStartTime(Date.now());
+  }, [currentQuestion]);
+
   const fetchNextQuestion = (previousQuestionAnsweredCorrectly = null) => {
     let url = 'http://localhost:3001/get-exam-questions';
     if (previousQuestionAnsweredCorrectly !== null) {
@@ -58,16 +70,42 @@ function ExamPage() {
   };
 
   const submitAnswer = () => {
+    const timeTaken = Date.now() - startTime;
     const isCorrect = selectedOption === currentQuestion.correct_option_id;
+    const newResponse = {
+      qid : currentQuestion.qid,
+      useroption: selectedOption,
+      iscorrect: isCorrect,
+      timetaken: timeTaken,
+      difficulty: currentQuestion.difficulty
+    };
+    setResponses([...responses, newResponse]);
     setAnsweredQuestionsCount(answeredQuestionsCount + 1);
     if (answeredQuestionsCount < 9) {
       fetchNextQuestion(isCorrect);
     }
+    setStartTime(Date.now());
   };
 
   const submitExam = () => {
-    console.log("Exam submitted successfully.");
-    alert("The exam has been submitted!");
+   
+    const examData = {
+      eid: eid,   // Exam ID from the router's state or passed as a prop 
+      did: did,   // Date ID from the router's state or passed as a prop
+      responses: responses
+    };
+  
+    axios.post('http://localhost:3001/save-responses', examData, { withCredentials: true })
+      .then(response => {
+        console.log("Exam submitted successfully: ", response.data);
+        alert("The exam has been submitted");
+        // Redirect or handle the exam end here.
+        navigate('/homepage');
+      })
+      .catch(error => {
+        console.error("Error submitting exam responses", error);
+        // Handle error here.
+      });
   };
 
   const renderTimer = () => {

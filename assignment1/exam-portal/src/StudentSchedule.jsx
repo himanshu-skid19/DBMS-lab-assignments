@@ -39,7 +39,7 @@ function StudentSchedule() {
       .then(response => {
         // Handle success response
         if(response.data.status === 'success') {
-            navigate('/start-exam'); // Redirect to exam page
+            navigate('/start-exam', {state: {eid : selectedExam, did: selectedDate}}); // Redirect to exam page
         } else {
           // Handle case where user tries to register for an exam they're already registered for
           setError(response.data.message || 'Error registering for the exam.');
