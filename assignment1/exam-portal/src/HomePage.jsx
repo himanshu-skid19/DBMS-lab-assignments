@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css'; // Assuming similar CSS styling rules as LoginPage.css
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import axios from 'axios';
 
 function HomePage() {
     const [userInfo, setUserInfo] = useState(null);
@@ -67,20 +68,20 @@ function HomePage() {
 
     const handleAnalytics = async () => {
         try {
-            const response = await fetch('http://localhost:3001/analytics', { // Adjust URL as needed
-                method: 'POST',
+            const response = await axios.get('http://localhost:3001/analytics', {
+                withCredentials: true, // If your backend requires credentials (cookies, basic HTTP auth)
             });
-            const responseData = await response.json();
+            const responseData = response.data;
             if (responseData.status === 'success') {
                 // Optionally clear any client-side state here
-                navigate('/analytics'); // Redirect to login page or wherever appropriate
+                navigate('/analytics'); // Redirect to analytics page or wherever appropriate
             } else {
-                console.error('Exam registration failed');
+                console.error('Analytics retrieval failed');
             }
         } catch (error) {
-            console.error('There was an error!', error);
+            console.error('There was an error fetching analytics!', error);
         }
-    }
+    };
     const handleExam = async () => {
         try {
             const response = await fetch('http://localhost:3001/stud-schedule', { // Adjust URL as needed

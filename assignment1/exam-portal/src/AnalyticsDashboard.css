@@ -1,0 +1,131 @@
+/* Existing styles */
+/* ... */
+
+/* Styling for analytics dashboard */
+.analytics-dashboard {
+    display: flex;
+    flex-direction: row; /* Align children side by side */
+    justify-content: space-between; /* Distributes children evenly along the main axis */
+    align-items: flex-start; /* Align items at the start of the flex container */
+    padding-top: 60px;
+    gap: 20px; /* Adds space between the containers */
+  }
+  
+  .analytics-container, .chart-container {
+    flex: 1; /* Assign flex-grow to allow containers to fill the space */
+    padding: 50px;
+    height: 625px;
+    background: #ffffff; /* Light background for better readability */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Style for the dropdown and overall analytics section */
+  .analytics-dropdown,
+  .overall-analytics {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for individual exam analytics */
+  .exam-analytics {
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+  }
+  
+.graphs-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px; /* Adjust the gap to your preference */
+    flex-wrap: wrap; /* Allows the items to wrap on smaller screens */
+    width: 69%; /* Full width */
+    padding: 20px; /* Adds some padding inside the container */
+    margin-top: 20px; /* Space between analytics-container and graphs-container */
+    background: #f8f8f8; /* A slightly different background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .graph-container {
+    flex: 1 1 48%; /* Flex-grow, flex-shrink, and flex-basis set to 48% */
+    height: 275px; /* Set a fixed height or make it responsive to content */
+    background: #ffffff; /* White background for graph */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    /* If graphs need titles or additional padding, adjust here */
+    padding: 10px;
+    display: flex;
+    justify-content: center; /* Centers the graph inside the container */
+    align-items: center; /* Vertically center the graph inside the container */
+  }
+  
+  .tooltip {
+    position: absolute;
+    text-align: center;
+    width: 120px;
+    height: 50px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+
+  /* Responsive considerations */
+  @media (max-width: 1024px) {
+    .analytics-dashboard, .graphs-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .analytics-container, .chart-container, .graph-container {
+      width: 90%; /* Full width on smaller screens */
+      flex-basis: auto; /* Adjust the basis for responsiveness */
+    }
+  
+    .graph-container {
+      flex: 1 1 90%; /* Take up more space on smaller screens */
+      margin-bottom: 20px; /* Space between graph containers */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .analytics-container, .chart-container, .graph-container {
+      width: 90%;
+    }
+  
+    .graph-container {
+      /* Adjustments for very small screens if necessary */
+    }
+  }
+ 
+  .grid line {
+    stroke: lightgrey;
+    shape-rendering: crispEdges;
+  }
+  .grid path {
+    stroke-width: 0;
+  }
+  .circle:hover {
+    fill: orange;
+}
+
+/* Style for the titles and labels */
+.text-title {
+    fill: #414241;
+    font-weight: bold;
+}
+
+.axis-label {
+    fill: #333;
+    font-size: 14px;
+}
+
+/* You can also include transition effects */
+.circle {
+    transition: fill 0.3s;
+}
+  

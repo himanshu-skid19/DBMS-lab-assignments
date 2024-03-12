@@ -283,6 +283,42 @@ app.post('/save-responses', (req, res) => {
   });
 });
 
+app.get('/analytics', (req, res) => {
+  if (!req.session.user){
+    return res.status(401).json({ status: 'error', message: 'You must be logged in to view analytics' });
+  }
+
+  const userId = req.session.user.id;
+
+  const sql = `
+    SELECT 
+        sa.eid,
+        sa.did,
+        e.ename AS exam_name, 
+        COUNT(sa.qid) AS total_questions,
+        SUM(CASE WHEN JSON_EXTRACT(sa.response, '$.iscorrect') = true THEN 1 ELSE 0 END) AS correct_answers,
+        AVG(JSON_EXTRACT(sa.response, '$.timetaken')) AS average_time_taken,
+        AVG(JSON_EXTRACT(sa.response, '$.difficulty')) AS average_difficulty
+    FROM 
+      savedanswers sa
+      JOIN exam e ON sa.eid = e.eid
+    WHERE 
+      sa.sid = ?
+    GROUP BY 
+      sa.eid;
+    `;
+
+    connection.query(sql, [userId], (error, results) => {
+      if (error){
+        console.error('Error fetching analytics:', error);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch analytics' });
+        return;
+      }
+      console.log(results);
+      res.json({ status: 'success', data: results });
+    });
+
+});
 app.post('/end-exam', (req, res) => {
   if (req.session.exam) {
       delete req.session.exam; // Remove exam details from session

@@ -5,6 +5,7 @@ import HomePage from './HomePage';
 import ExamRegister from './ExamRegister';
 import StudentSchedule from './StudentSchedule';
 import ExamPage from './ExamPage';
+import AnalyticsDashboard from './AnalyticsDashboard';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register-for-exam" element={<ExamRegister />} />
         <Route path="/stud-schedule" element={<StudentSchedule />} />
         <Route path="/start-exam" element={<ExamPage />} />
+        <Route path="/analytics" element={<AnalyticsDashboard />} /> 
       </Routes>
     </Router>
   );
