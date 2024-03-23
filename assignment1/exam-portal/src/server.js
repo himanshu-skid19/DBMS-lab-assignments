@@ -283,6 +283,48 @@ app.post('/save-responses', (req, res) => {
   });
 });
 
+
+app.get('/exam-details', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ status: 'error', message: 'You must be logged in to view exam details' });
+  }
+
+  const { eid, did } = req.query;
+  let sql = `
+    SELECT 
+      e.eid,
+      e.ename AS exam_name,
+      SUM(JSON_EXTRACT(sa.response, '$.iscorrect') = true) AS correct_answers,
+      SUM(JSON_EXTRACT(sa.response, '$.iscorrect') = false) AS incorrect_answers,
+      AVG(CASE WHEN JSON_EXTRACT(sa.response, '$.iscorrect') = true THEN JSON_EXTRACT(sa.response, '$.timetaken') END) AS average_time_correct,
+      AVG(CASE WHEN JSON_EXTRACT(sa.response, '$.iscorrect') = false THEN JSON_EXTRACT(sa.response, '$.timetaken') END) AS average_time_incorrect
+    FROM savedanswers sa
+    JOIN exam e ON sa.eid = e.eid
+    WHERE sa.eid = ?`;
+
+  // Adjust the SQL query and parameters based on the presence of `did`
+  let params = [eid]; // Always include `eid` in the parameters array
+  if (did) {
+    sql += " AND sa.did = ?";
+    params.push(did); // Add `did` to the parameters array if it's present
+  }
+
+  sql += " GROUP BY sa.eid;";
+
+  connection.query(sql, params, (error, results) => {
+    if (error) {
+      console.error('Error fetching exam details:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to fetch exam details' });
+      return;
+    }
+    // Assuming results are correctly fetched and structured
+    console.log("Fetched shit is", results[0]);
+    res.json({ status: 'success', data: results[0] || {} });
+  });
+});
+
+
+
 app.get('/analytics', (req, res) => {
   if (!req.session.user){
     return res.status(401).json({ status: 'error', message: 'You must be logged in to view analytics' });
