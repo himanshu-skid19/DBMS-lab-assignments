@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './RegistrationPage.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 function RegistrationPage() {
   const [formData, setFormData] = useState({
@@ -16,6 +15,7 @@ function RegistrationPage() {
     evaluatorPhone: '',
   });
   const navigate = useNavigate(); // Hook for navigation
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -26,65 +26,72 @@ function RegistrationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (formData.password !== formData.confirmPassword) {
         alert('Passwords do not match');
         return;
     }
 
-    // Assuming you're correcting the form data handling as per your application's needs
+    const userBody = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+    };
 
-    try {
-        const response = await fetch('http://localhost:3001/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email,
-              password: formData.password,
-              role: formData.role,
-                studentID: formData.studentID,
-                phone: formData.phone,
-            }),
-          });
-  
-      const responseData = await response.json(); // Assuming the response is JSON
-      console.log(responseData);
-    } catch (error) {
-      console.error('There was an error!', error);
+    // Perform the user registration
+    const userResponse = await performRegistration('http://localhost:3001/register', userBody);
+
+    if (userResponse.status !== 'success') {
+      console.error('User registration failed');
+      return;
     }
 
-    try {
-        const response = await fetch('http://localhost:3001/register2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: formData.name,
-              role: formData.role,
-                studentID: formData.studentID,
-                phone: formData.phone,
-              
-            }),
-          });
-  
-      const responseData = await response.json(); // Assuming the response is JSON
-      console.log(responseData);
-      if (responseData.status === 'success') {
-        // Optionally clear any client-side state here
-        navigate('/login'); // Redirect to login page or wherever appropriate
+    // Perform additional registration based on the role
+    let additionalBody = {};
+    let endpoint = 'http://localhost:3001/register2';
+
+    if (formData.role === 'student') {
+      additionalBody = {
+        name: formData.name,
+        role: formData.role,
+        id: formData.studentID,
+        phone: formData.phone,
+      };
+    } else if (formData.role === 'evaluator') {
+      additionalBody = {
+        name: formData.name,
+        role: formData.role,
+        id: formData.evaluatorID,
+        phone: formData.evaluatorPhone,
+      };
+    }
+
+    const additionalResponse = await performRegistration(endpoint, additionalBody);
+
+    if (additionalResponse.status === 'success') {
+      navigate('/login'); // Redirect to login page
     } else {
-        console.error('Registration failed');
+      console.error('Additional registration failed');
     }
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-    
   };
 
+  const performRegistration = async (url, body) => {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      return await response.json();
+    } catch (error) {
+      console.error('There was an error!', error);
+      return { status: 'error', message: error };
+    }
+  };
 
 
   return (
@@ -140,17 +147,17 @@ function RegistrationPage() {
                 </div>
               )}
               {formData.role === 'evaluator' && (
-                <div className='middle-column'>
-                  <div className="form-group">
-                    <label htmlFor="evaluator-id">Evaluator ID:</label>
-                    <input className="input-field" type="text" id="evaluator-id" name="evaluatorID" value={formData.evaluatorID} onChange={handleChange} required />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Phone:</label>
-                    <input className="input-field" type="text" id="phone" name="phone" value={formData.evaluatorPhonehone} onChange={handleChange} required />
-                  </div>
+              <div className='middle-column'>
+                <div className="form-group">
+                  <label htmlFor="evaluator-id">Evaluator ID:</label>
+                  <input className="input-field" type="text" id="evaluator-id" name="evaluatorID" value={formData.evaluatorID} onChange={handleChange} required />
                 </div>
-              )}
+                <div className="form-group">
+                  <label htmlFor="phone">Phone:</label>
+                  <input className="input-field" type="text" id="phone" name="evaluatorPhone" value={formData.evaluatorPhone} onChange={handleChange} required />
+                </div>
+              </div>
+            )}
               
             </div>
   

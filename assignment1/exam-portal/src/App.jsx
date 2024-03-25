@@ -6,6 +6,9 @@ import ExamRegister from './ExamRegister';
 import StudentSchedule from './StudentSchedule';
 import ExamPage from './ExamPage';
 import AnalyticsDashboard from './AnalyticsDashboard';
+import EvalDashboard from './EvalDashboard';
+import RegisterExam from './RegisterExam';
+import StudentResults from './StudentResults';
 
 
 function App() {
@@ -23,6 +26,9 @@ function App() {
         <Route path="/stud-schedule" element={<StudentSchedule />} />
         <Route path="/start-exam" element={<ExamPage />} />
         <Route path="/analytics" element={<AnalyticsDashboard />} /> 
+        <Route path="/evaldashboard" element={<EvalDashboard />} />
+        <Route path="/register-exam" element={<RegisterExam />} />
+        <Route path="/student-results" element={<StudentResults />} />
       </Routes>
     </Router>
   );

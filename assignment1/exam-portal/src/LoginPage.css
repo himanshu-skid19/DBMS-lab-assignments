@@ -80,6 +80,17 @@ input[type=email], input[type=password], input[type=text] {
     background-color: #eaeaea; /* Lighter grey for input background */
 }
 
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #eaeaea;
+  }
+
 button {
     width: 100%;
     padding: 10px;

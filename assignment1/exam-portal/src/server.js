@@ -66,27 +66,39 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/register2', (req, res) => {
-  const { name, role, studentID, phone } = req.body;
+  const { name, role, id, phone } = req.body;
 
-  if (role == 'student') {
-    // Use the hashed password in the INSERT query
-    const sql = "INSERT INTO student (sid, sname, Phone_number) VALUES (?, ?, ?)";
-    connection.query(sql, [studentID, name, phone], (error, results) => {
-      if (error) {
-        console.error('Error executing query:', error);
-        res.status(500).json({ status: 'error', message: 'Registration failed' });
-        return;
-      }
-      res.json({ status: 'success', message: 'Registration successful' });
-    });
+  let sql;
+  let params = [id, name, phone];
+
+  if (role === 'student') {
+    sql = "INSERT INTO student (sid, sname, Phone_number) VALUES (?, ?, ?)";
+  } else if (role === 'evaluator') {
+    sql = "INSERT INTO evaluators (evid, name, Phone) VALUES (?, ?, ?)";
+  } else {
+    // Handle unknown role
+    res.status(400).json({ status: 'error', message: 'Invalid role specified' });
+    return;
   }
 
+  connection.query(sql, params, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ status: 'error', message: 'Registration failed' });
+      return;
+    }
+    res.json({ status: 'success', message: 'Registration successful' });
   });
-
+});
 
 app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  const sql = "SELECT * FROM studentdetails WHERE email = ?";
+  const { email, password, role } = req.body;
+  
+  // Choose the table based on the role
+  const table = role === 'evaluator' ? 'evaluator_details' : 'studentdetails';
+  
+  // Assuming evaluator_details also has an email column
+  const sql = `SELECT * FROM ${table} WHERE email = ?`;
   connection.query(sql, [email], (error, results) => {
     if (error) {
       console.error('Error executing query:', error);
@@ -101,6 +113,7 @@ app.post('/login', (req, res) => {
 
     const user = results[0];
 
+    // Assuming both tables have a password_hash column
     bcrypt.compare(password, user.password_hash, (err, result) => {
       if (err) {
         console.error('Error comparing passwords:', err);
@@ -109,19 +122,20 @@ app.post('/login', (req, res) => {
       }
 
       if (result) {
-        // Store user information in session
-        req.session.user = { id: user.sid, name: user.name, email: user.email, role: user.role };
-        // console.log('User set in session:', req.session.user); // Add this line to log the session user
-   
-        res.json({ status: 'success', message: 'Login successful', user: { name: user.name, email: user.email, role: user.role } });
-        res.end(JSON.stringify({ message: 'Session started...' }));
+        // Set user information in session based on the role
+        req.session.user = role === 'evaluator' 
+          ? { id: user.evid, name: user.name, email: user.email, role }
+          : { id: user.sid, name: user.name, email: user.email, role };
 
+        res.json({ status: 'success', message: 'Login successful', user: { name: user.name, email: user.email, role } });
+        // Removed the redundant res.end call, as res.json already ends the response.
       } else {
         res.status(401).json({ status: 'error', message: 'Invalid email or password' });
       }
     });
   });
 });
+
 
 app.post('/register-for-exam', (req, res) => {
   const { did } = req.body;
@@ -168,6 +182,41 @@ app.post('/exam-register', (req, res) => {
   });
 });
 
+app.post('/register-exam', (req, res) => {
+  const { examID, examName, fees, date, timeslot, venue, did } = req.body;
+
+  // First, insert data into the Exam table
+  const insertExamSql = 'INSERT INTO exam (eid, ename, fees) VALUES (?, ?, ?)';
+  connection.query(insertExamSql, [examID, examName, fees], (err, result) => {
+      if (err) {
+          console.error('Error inserting into Exam table:', err);
+          return res.status(500).json({ status: 'error', message: 'Failed to register exam' });
+      }
+
+      // Then, insert data into the dates table
+      const insertDatesSql = 'INSERT INTO dates (did, Venue, Timeslot, Date) VALUES (?, ?, ?, ?)';
+      connection.query(insertDatesSql, [did, venue, timeslot, date], (err, result) => {
+          if (err) {
+              console.error('Error inserting into dates table:', err);
+              return res.status(500).json({ status: 'error', message: 'Failed to register exam' });
+          }
+
+          // Finally, insert eid and did into the exam_schedule table
+          const insertExamScheduleSql = 'INSERT INTO exam_schedule (eid, did) VALUES (?, ?)';
+          connection.query(insertExamScheduleSql, [examID, did], (err, result) => {
+              if (err) {
+                  console.error('Error inserting into exam_schedule table:', err);
+                  return res.status(500).json({ status: 'error', message: 'Failed to complete exam registration' });
+              }
+
+              // If all inserts are successful, send a success response
+              res.json({ status: 'success', message: 'Exam registered successfully' });
+          });
+      });
+  });
+});
+
+
 app.post('/stud-schedule', (req, res) => {
   const {did : DateId, eid: ExamId} = req.body;
   console.log(DateId, ExamId);
@@ -182,6 +231,92 @@ app.post('/stud-schedule', (req, res) => {
     res.json({ status: 'success', data: results });
   });
 });
+
+app.get('/students', (req, res) => {
+  const sql = "SELECT DISTINCT sid, sname FROM student_result"; // Use DISTINCT to get unique student IDs and names
+
+  connection.query(sql, (error, results) => {
+    if (error) {
+      console.error('Error fetching students:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to fetch students' });
+      return;
+    }
+
+    const students = results.map(row => {
+      return { id: row.sid, name: row.sname }; // Ensure to use 'sname' instead of 'name' if that is the column name
+    });
+
+    res.json(students); // Send the students array as a JSON response
+  });
+});
+
+app.get('/exams-for-student', (req, res) => {
+  const studentId = req.query.sid;
+  if (!studentId) {
+    res.status(400).json({ status: 'error', message: 'Student ID is required' });
+    return;
+  }
+
+  // Adjust the following SQL to match your table's structure and columns.
+  // This query assumes that 'eid' is the exam ID and 'ename' is the exam name.
+  const sql = "SELECT DISTINCT eid, ename, did, date FROM student_result WHERE sid = ?";
+
+  connection.query(sql, [studentId], (error, results) => {
+    if (error) {
+      console.error('Error fetching exams for student:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to fetch exams for student' });
+      return;
+    }
+
+    // Create an array of exams with only the IDs and names
+    const exams = results.map(row => ({
+      id: row.eid,
+      name: row.ename,
+      did: row.did,
+      date: row.date
+    }));
+
+    res.json(exams);
+  });
+});
+
+
+app.get('/student-results', (req, res) => {
+  const studentId = req.query.sid; // Get student ID from query string
+  const examId = req.query.eid; // Get exam ID from query string
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const offset = (page - 1) * pageSize;
+
+  let sql = "SELECT * FROM student_result WHERE 1=1";
+  let params = [];
+
+  // If a student ID is provided, add it to the WHERE clause
+  if (studentId) {
+    sql += " AND sid = ?";
+    params.push(studentId);
+  }
+
+  // If an exam ID is provided, add it to the WHERE clause
+  if (examId) {
+    sql += " AND eid = ?";
+    params.push(examId);
+  }
+
+  // Add limit and offset for pagination
+  sql += " LIMIT ? OFFSET ?";
+  params.push(pageSize, offset);
+
+  connection.query(sql, params, (error, results) => {
+    if (error) {
+        console.error('Error fetching student results:', error);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch student results' });
+        return;
+    }
+    res.json(results);
+  });
+});
+
 
 app.post('/start-exam', (req, res) => {
   const {did : DateId, eid: ExamId} = req.body;
@@ -320,6 +455,42 @@ app.get('/exam-details', (req, res) => {
     // Assuming results are correctly fetched and structured
     console.log("Fetched shit is", results[0]);
     res.json({ status: 'success', data: results[0] || {} });
+  });
+});
+
+app.get('/exam-analytics', (req, res) => {
+  const { sid, eid } = req.query;
+
+  if (!sid || !eid) {
+    return res.status(400).json({ status: 'error', message: 'Student ID and Exam ID are required' });
+  }
+
+  const sql = `
+    SELECT 
+        sa.eid,
+        sa.did,
+        e.ename AS exam_name, 
+        COUNT(sa.qid) AS total_questions,
+        SUM(CASE WHEN JSON_EXTRACT(sa.response, '$.iscorrect') = true THEN 1 ELSE 0 END) AS correct_answers,
+        AVG(JSON_EXTRACT(sa.response, '$.timetaken')) AS average_time_taken,
+        AVG(JSON_EXTRACT(sa.response, '$.difficulty')) AS average_difficulty
+    FROM 
+      savedanswers sa
+      JOIN exam e ON sa.eid = e.eid
+    WHERE 
+      sa.sid = ? AND sa.eid = ?
+    GROUP BY 
+      sa.eid, sa.did;
+  `;
+
+  connection.query(sql, [sid, eid], (error, results) => {
+    if (error) {
+      console.error('Error fetching exam analytics:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to fetch exam analytics' });
+      return;
+    }
+
+    res.json({ status: 'success', data: results[0] || {} }); // Assuming there's only one result per sid-eid pair
   });
 });
 

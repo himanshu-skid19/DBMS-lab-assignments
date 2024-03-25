@@ -1,0 +1,217 @@
+/* General reset and modern box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Root font and color definitions for easy theming and adjustments */
+:root {
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --primary-color: #007bff;
+    --hover-color: #0056b3;
+    --navbar-bg-color: #444;
+    --navbar-text-color: #f2f2f2;
+    --section-bg-color: #ffffff;
+    --button-bg-color: #007bff;
+    --button-text-color: #ffffff;
+    --button-hover-bg-color: #0056b3;
+    --list-bg-color: #ffffff;
+    --list-item-hover-bg-color: #f7f7f7;
+    --list-item-selected-bg-color: #e2e2e2;
+}
+
+body, html {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.navbar {
+    background-color: var(--navbar-bg-color);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    padding: 0 20px; /* Add padding for content alignment */
+}
+
+.navbar a {
+    float: left;
+    color: var(--navbar-text-color);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.navbar a:hover {
+    background-color: var(--hover-color);
+}
+
+.main-content {
+    padding-top: 60px;
+    min-height: calc(100vh - 60px);
+    padding: 0 20px; /* Ensure content does not stick to edges */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header {
+    margin: 20px 0;
+}
+
+section {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px;
+    padding: 20px;
+    background-color: var(--section-bg-color);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="email"], input[type="password"], input[type="text"], input[type="date"], input[type="number"], select {
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--list-bg-color);
+}
+
+button {
+    padding: 10px;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+
+.form-columns {
+    display: flex;
+    flex-direction: row;
+    width: 100%; /* Ensure the columns take full width of the form */
+}
+
+.left-column, .middle-column, .right-column {
+    flex: 1;
+    min-width: 250px; /* Minimum width to prevent fields from being too narrow */
+    padding: 10px; /* Space between columns */
+}
+.students-list, .exams-list {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: var(--list-bg-color);
+    border-radius: 4px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.student-name, .exam-name {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.student-name:hover, .exam-name:hover {
+    background-color: var(--list-item-hover-bg-color);
+}
+
+.student-name.selected, .exam-name.selected {
+    background-color: var(--list-item-selected-bg-color);
+    font-weight: bold;
+}
+
+.exam-results {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+    border: 1px solid #ccc; /* Optional: adds a border around the scrollable area */
+    padding: 10px; /* Optional: adds some padding inside the scrollable area */
+    margin-top: 20px; /* Adds some space above the scrollable area */
+}
+
+table {
+    width: 100%; /* Ensures the table fills the container */
+    border-collapse: collapse; /* Improves the appearance of the table */
+}
+
+th, td {
+    text-align: left; /* Aligns the table headers and cells to the left */
+    padding: 8px; /* Adds padding inside table cells */
+    border-bottom: 1px solid #ddd; /* Adds a border between rows */
+}
+
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 5px;
+  }
+  
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+
+@media (max-width: 768px) {
+    .main-content, .navbar a {
+        padding: 0 10px;
+    }
+
+    .header, section {
+        width: auto; /* Allow sections to fill available width */
+        margin: 10px;
+    }
+}

@@ -4,7 +4,7 @@ import './HomePage.css'; // Assuming similar CSS styling rules as LoginPage.css
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import axios from 'axios';
 
-function HomePage() {
+function EvalDashboard() {
     const [userInfo, setUserInfo] = useState(null);
     const navigate = useNavigate(); // Hook for navigation
     
@@ -57,7 +57,7 @@ function HomePage() {
             const responseData = await response.json();
             if (responseData.status === 'success') {
                 // Optionally clear any client-side state here
-                navigate('/exam-register'); // Redirect to login page or wherever appropriate
+                navigate('/register-exam'); // Redirect to login page or wherever appropriate
             } else {
                 console.error('Exam registration failed');
             }
@@ -68,36 +68,16 @@ function HomePage() {
 
     const handleAnalytics = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/analytics', {
-                withCredentials: true, // If your backend requires credentials (cookies, basic HTTP auth)
+            const response = await axios.get('http://localhost:3001/student-results', {
+                withCredentials: true,
             });
             const responseData = response.data;
-            if (responseData.status === 'success') {
-                // Optionally clear any client-side state here
-                navigate('/analytics'); // Redirect to analytics page or wherever appropriate
-            } else {
-                console.error('Analytics retrieval failed');
-            }
+            navigate('/student-results', { state: { data: responseData } }); // Pass the analytics data to the route as state
         } catch (error) {
-            console.error('There was an error fetching analytics!', error);
+            console.error('Error fetching analytics:', error.response || error.message || error);
         }
     };
-    const handleExam = async () => {
-        try {
-            const response = await fetch('http://localhost:3001/stud-schedule', { // Adjust URL as needed
-                method: 'POST',
-                credentials: 'include'
-            });
-            const responseData = await response.json();
-            if (responseData.status === 'success') {
-                navigate('/stud-schedule'); 
-            } else {
-                console.error('Exam registration failed');
-            }
-        } catch (error) {
-            console.error('There was an error!', error);
-        }
-    }
+    
 
   return (
     <>
@@ -119,26 +99,18 @@ function HomePage() {
         <div className="form-columns">
             <div className="left-column">
                 <section className="analytics-section">
-                <h2>View Analytics</h2>
-                <p>See your performance and areas to improve.</p>
-                <button onClick={handleAnalytics}>Go to Analytics</button>
-                </section>
-            </div>
-            
-            <div className="middle-column">
-                <section className="exam-section">
-                <h2>Take Exam</h2>
-                <p>Start or continue your exams here. Best of luck!</p>
-                <button onClick={handleExam}>Start Exam</button>
+                    <h2>View Student Analytics</h2>
+                    <p>See the performance of students.</p>
+                    <button onClick={handleAnalytics}>Go to Analytics</button>
                 </section>
             </div>
 
-            <div className="right-column">
+            <div className='middle-column'>
                 <section className="user-info-section">
-                <h2>Exam Registration</h2>
-                <button onClick={handleExamRegister}>Register Exam</button>
-                
-                </section>
+                    <h2>Exam Registration</h2>
+                    <button onClick={handleExamRegister}>Register An Exam</button>
+                    
+                </section>                
             </div>
 
         </div>
@@ -147,4 +119,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default EvalDashboard;

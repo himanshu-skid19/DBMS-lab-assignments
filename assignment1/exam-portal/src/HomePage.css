@@ -38,15 +38,26 @@ body, html {
 
 /* A wrapper for the main content to give padding equal to the navbar height */
 .main-content {
-    padding-top: 30px; /* Adjust this value to match your navbar's height */
-    height: calc(100% - 50px); /* Adjust this value to match your navbar's height */
-    display:flex;
+    padding-top: 50px; /* Adjusted to ensure content is below the navbar */
+    display: flex;
     justify-content: center;
-    align-items: center;
-    padding-right: 200px;
-    padding-left:200px;
+    align-items: flex-start; /* Changed to flex-start to align content to the top */
+    width: 100%;
+    padding: 60px 20px 0; /* Added horizontal padding and top padding */
 }
 
+
+.form-columns {
+    display: flex;
+    flex-direction: row;
+    width: 100%; /* Ensure the columns take full width of the form */
+}
+
+.left-column, .middle-column, .right-column {
+    flex: 1;
+    min-width: 250px; /* Minimum width to prevent fields from being too narrow */
+    padding: 10px; /* Space between columns */
+}
 .header {
     padding: 20px;
     text-align: center;
@@ -58,8 +69,9 @@ body, html {
 .exam-section {
     width: 100%;
     max-width: 400px;
+    flex: 1;
     padding: 100px;
-    background-color: #f4f4f4;
+    background-color:#f4f4f4;
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Lighter shadow for a softer look */
     border-radius: 8px;
     text-align: center;
@@ -70,6 +82,7 @@ body, html {
     width: 100%;
     max-width: 400px;
     padding: 100px;
+    flex: 1;
     background-color: #f4f4f4;
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Lighter shadow for a softer look */
     border-radius: 8px;
@@ -82,6 +95,7 @@ body, html {
     width: 100%;
     max-width: 400px;
     padding: 100px;
+    flex: 1;
     background-color: #f4f4f4;
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Lighter shadow for a softer look */
     border-radius: 8px;
