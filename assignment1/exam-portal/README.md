@@ -1,4 +1,4 @@
-# Examination Portal System
+# Examination Monitoring System
 > Created by Himanshu Singhal, 220150004, DSAI
 
 This is part of an assignment from the course DA215: Database Management Systems. It utilises ReactJS, NodeJS and MySQL for its functionality.
