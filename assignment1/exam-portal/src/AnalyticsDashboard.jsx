@@ -70,7 +70,7 @@ function AnalyticsDashboard() {
                     <h2>Exam Analytics Dashboard</h2>
                     <div className="analytics-dropdown">
                         <label>Select an exam to view detailed analytics:</label>
-                        <select value={selectedExam} onChange={handleExamSelection}>
+                        <select value={selectedExam} style={{ color: 'black' }} onChange={handleExamSelection}>
                             <option value="">Overall Analytics</option>
                             {analyticsData.map(({ eid, did, exam_name }) => (
                                 <option key={`${eid}|${did}`} value={`${eid}|${did}`}>{exam_name}</option>

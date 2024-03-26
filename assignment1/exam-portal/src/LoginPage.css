@@ -6,11 +6,9 @@
 }
 
 body, html {
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern font */
-    background-color: #f4f4f4; /* Light grey background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: mediumspringgreen;
 }
-
 /* Styling the navigation bar */
 .navbar {
     background-color: #333333; /* Dark grey */
@@ -37,14 +35,13 @@ body, html {
 
 /* A wrapper for the main content to give padding equal to the navbar height */
 .main-content {
-    padding-top: 30px; /* Adjust this value to match your navbar's height */
-    height: calc(100%); /* Adjust this value to match your navbar's height */
-    display:flex;
+    padding-top: 30px;
+    display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: 550px;
+    /* Removed the fixed height and padding-left */
+    background-color: rgb(255, 255, 255); /* This will not be visible if .login-container has a white background */
 }
-
 /* Styling for the login container */
 .login-container {
     width: 100%;

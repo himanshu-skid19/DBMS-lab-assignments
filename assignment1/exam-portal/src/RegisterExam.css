@@ -50,6 +50,11 @@
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
   }
   
+  .black-text-input {
+    color: black;
+  }
+  
+
   button[type="submit"] {
     width: 100%;
     background-color: #007bff;

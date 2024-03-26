@@ -102,7 +102,7 @@ function HomePage() {
   return (
     <>
       <div className="navbar">
-            <a href="#">Home</a>
+            <a href="/homepage">Home</a>
             {/* Add more navigation items as needed */}
             <a onClick={handleLogout}>Logout</a> {/* Logout Button */}
           </div>

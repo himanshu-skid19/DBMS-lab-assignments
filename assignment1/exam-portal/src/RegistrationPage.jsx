@@ -97,7 +97,7 @@ function RegistrationPage() {
   return (
     <>
       <div className="navbar">
-          <a href="#home">Home</a>
+          <a href="/login">Home</a>
           {/* Additional navigation items here */}
       </div>
       <div className='main-content'>

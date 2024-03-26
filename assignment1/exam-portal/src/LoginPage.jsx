@@ -56,7 +56,7 @@ function LoginPage() {
     return (
         <>
             <div className="navbar">
-                <a href="#">Home</a>
+                <a href="/login">Home</a>
             </div>
             <div className="main-content">
                 <div className="login-container">

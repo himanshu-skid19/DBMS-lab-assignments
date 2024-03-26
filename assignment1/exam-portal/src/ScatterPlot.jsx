@@ -41,7 +41,7 @@ const ScatterPlot = ({ data }) => {
                 .attr("text-anchor", "middle")  
                 .style("font-size", "16px") 
                 .style("text-decoration", "underline")  
-                .text("Average Time Taken vs Number of Correct Answers");
+                .text("Number of Correct Answers vs Average Time Taken");
 
             // Add dots for each data point
             svg.selectAll("dot")

@@ -43,7 +43,7 @@ function RegisterExam() {
     return (
         <>
         <div className="navbar">
-        <a href="/homepage">Home</a>
+        <a href="/evaldashboard">Home</a>
         {/* Additional navigation items here */}
       </div>
         <div className="register-exam-container">

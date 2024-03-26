@@ -21,10 +21,13 @@
   }
   
   /* Style for the dropdown and overall analytics section */
-  .analytics-dropdown,
+  .analytics-dropdown{
+    color: black;
+  }
   .overall-analytics {
     width: 100%;
     margin-bottom: 20px;
+    color: black;
   }
   
   /* Style for individual exam analytics */
@@ -128,4 +131,8 @@
 .circle {
     transition: fill 0.3s;
 }
+.black-text-input {
+  color: black;
+}
+
   
