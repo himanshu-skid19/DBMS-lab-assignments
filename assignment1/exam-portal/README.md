@@ -20,9 +20,9 @@ Some of the key features in this project are:
 ## How to run
 1. Open XAMPP and run MySQL server
 2. Import exam_system.sql
-3. Go to ```/src/```
-4. Ensure npm and node are install.
-5. Run ```npm install```
+3. Run ```npm install```
+4. Go to ```/src/```
+5. Ensure npm and node are install.
 6. Run ```npm run dev ```
 7. Run ```node server.js```
 
